@@ -8,12 +8,17 @@ export default {
     page: CommonEnum.PAGE,
     showLoadMore: true,
     reloadCommentsNum: 0,
+    order: null,
   },
 
   // 同步方法
   reducers: {
     getDetail(state, payload) {
       return { ...state, detail: payload };
+    },
+    // 获取订单
+    setOrder(state, payload) {
+      return { ...state, order: payload };
     },
     // 获取评论
     getComments(state, payload) {
@@ -63,7 +68,7 @@ export default {
     async getCommentsAsync(dispatch, rootState, payload) {
       const { comments, page } = rootState.house;
       const lists = await Http({
-        url: '/comments/lists',
+        url: '/comment/lists',
         body: {
           ...payload,
           pageSize: page.pageSize,
@@ -84,7 +89,7 @@ export default {
     // 添加评论
     async addCommentsAsync(dispatch, rootState, payload) {
       const result = await Http({
-        url: '/comments/add',
+        url: '/comment/add',
         body: payload,
       });
       if (result) {
@@ -100,6 +105,41 @@ export default {
           payload: {},
         });
       }
+    },
+    // 获取订单(是否有订单)
+    async hasOrderAsync(dispatch, rootState, payload) {
+      const order = await Http({
+        url: '/orders/hasOrder',
+        body: payload,
+      });
+      dispatch({
+        type: 'setOrder',
+        payload: order,
+      });
+    },
+
+    // 添加订单
+    async addOrderAsync(dispatch, rootState, payload) {
+      const result = await Http({
+        url: '/orders/addOrder',
+        body: payload,
+      });
+      dispatch({
+        type: 'setOrder',
+        payload: result,
+      });
+    },
+
+    // 删除订单
+    async delOrderAsync(dispatch, rootState, payload) {
+      const result = await Http({
+        url: '/orders/delOrder',
+        body: payload,
+      });
+      dispatch({
+        type: 'setOrder',
+        payload: result,
+      });
     },
   },
 };

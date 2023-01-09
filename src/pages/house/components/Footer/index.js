@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from '@/components';
 import { TextareaItem, Button, Toast } from 'antd-mobile';
 import { useStoreHook } from 'think-react-store';
+import { useLocation } from 'umi';
 
 export default function (props) {
+  // 获取参数
+  const { query } = useLocation();
   const [show, setShow] = useState(false);
   // text: 评论内容
   const [commentsValue, setCommentsValue] = useState('');
@@ -39,7 +42,7 @@ export default function (props) {
       return;
     } else {
       // 提交评论
-      addCommentsAsync({ comment: commentsValue });
+      addCommentsAsync({ comment: commentsValue, houseId: query?.id });
       // 关闭模态框
       handleClose();
     }

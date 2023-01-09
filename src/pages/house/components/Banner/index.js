@@ -20,7 +20,7 @@ export default function (props) {
         {props?.banner?.map((item, index) => {
           return (
             <div className="swiper-slide" key={item}>
-              <img alt="banner" src={item} />
+              <img alt="banner" src={item.url} />
             </div>
           );
         })}

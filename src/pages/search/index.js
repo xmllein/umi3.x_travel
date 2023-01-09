@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'umi';
+import { useLocation, history } from 'umi';
 import { SearchBar, ActivityIndicator } from 'antd-mobile';
 import { useHttpHook, useObserverHook, useImgHook } from '@/hooks';
 import { ShowLoadmore } from '@/components';
@@ -26,7 +26,7 @@ export default function (props) {
     body: {
       ...page,
       houseName: houseSubmitName,
-      code: query?.code,
+      code: Array.isArray(query?.code) ? query?.code[0] : query?.code,
       startTime: query?.startTime + ' 00:00:00',
       endTime: query?.endTime + ' 23:59:59',
     },
@@ -105,6 +105,16 @@ export default function (props) {
     _handleSubmit(val);
   };
 
+  // 点击跳转详情
+  const handleClick = (id) => {
+    history.push({
+      pathname: '/house',
+      query: {
+        id,
+      },
+    });
+  };
+
   return (
     <div className="search-page">
       {/* 顶部搜索栏 */}
@@ -121,15 +131,19 @@ export default function (props) {
       ) : (
         <div className="result">
           {houseLists?.map((item) => (
-            <div className="item" key={item.id}>
+            <div
+              className="item"
+              key={item.id}
+              onClick={() => handleClick(item.id)}
+            >
               <img
-                data-src={item.img}
+                data-src={item?.imgs[0]?.url}
                 src={require('../../assets/blank.png')}
                 className="item-img"
                 alt="img"
               />
               <div className="item-right">
-                <div className="title">{item.title}</div>
+                <div className="title">{item.name}</div>
                 <div className="price">￥{item.price}</div>
               </div>
             </div>

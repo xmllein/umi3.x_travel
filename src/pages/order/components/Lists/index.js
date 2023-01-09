@@ -5,14 +5,23 @@ import { ShowLoadmore } from '@/components';
 import { OrderSkeletons } from '@/skeletons';
 import Item from '../Item';
 export default function (props) {
-  const [state, setState] = useState();
+  // 暂无数据
+  const [state, setState] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {}, [
+    setTimeout(() => {
+      if (isEmpty(props?.orders)) {
+        setState(true);
+      }
+    }, 1500),
+  ]);
 
   return (
     <div>
       {isEmpty(props?.orders) ? (
-        <OrderSkeletons />
+        <>
+          {state ? <ShowLoadmore showLoadMore={false} /> : <OrderSkeletons />}
+        </>
       ) : (
         <div className="tab-lists">
           {props?.orders?.map((item) => (

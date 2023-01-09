@@ -20,10 +20,10 @@ export default function (props) {
               />
               <div className="right">
                 <div className="right-top">
-                  <p>{item.username}</p>
+                  <p>{item?.user?.username}</p>
                   <p>{Timer(item.createTime)}</p>
                 </div>
-                <div className="right-bottom">{item.info}</div>
+                <div className="right-bottom">{item.msg}</div>
               </div>
             </div>
           );

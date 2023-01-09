@@ -8,7 +8,8 @@ export function onRouteChange(route) {
     (item) => item.path === route.location.pathname,
   );
   // 是否登录
-  const isLogin = cookie.get('user');
+  // const isLogin = cookie.get('user');
+  const isLogin = localStorage.getItem('token');
   if (nowPath[0].auth && !isLogin && nowPath.length === 1) {
     history.push({
       pathname: '/login',

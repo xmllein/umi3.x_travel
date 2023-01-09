@@ -7,7 +7,7 @@ export default {
     id: undefined,
     username: undefined,
     avatar: undefined,
-    tel: undefined,
+    phone: undefined,
     sign: undefined,
   },
   // 同步
@@ -64,10 +64,13 @@ export default {
       });
       if (user) {
         // console.log(urlGet('from'));
-        cookie.set('user', user);
+        // cookie.set('user', user);
+        // 本地存储
+        localStorage.setItem('token', user.token);
+        localStorage.setItem('username', user.username);
+        console.log(urlGet('from'));
+        urlGet('from') && history.push(urlGet('from'));
         Toast.success('登录成功');
-
-        urlGet('from') ? history.push(urlGet('from')) : history.push('/');
       }
     },
     // 用户注册
@@ -77,9 +80,32 @@ export default {
         body: payload,
       });
       if (user) {
-        cookie.set('user', user);
+        // cookie.set('user', user);
+        // 本地存储token
+        localStorage.setItem('token', user.token);
+        localStorage.setItem('username', user.username);
         Toast.success('注册成功');
         history.push('/login');
+      }
+    },
+
+    // 用户退出
+    async logoutAsync(dispatch, rootState, payload) {
+      const user = await Http({
+        url: '/user/logout',
+        body: payload,
+      });
+      if (user) {
+        // cookie.remove('user');
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        Toast.success('退出成功');
+        history.push({
+          pathname: '/login',
+          query: {
+            from: location.pathname,
+          },
+        });
       }
     },
   },

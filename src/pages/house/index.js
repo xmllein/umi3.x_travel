@@ -25,17 +25,32 @@ export default function (props) {
       reloadCommentsNum,
       showLoadMore,
       resetData,
+      order,
+      hasOrderAsync,
+      addOrderAsync,
+      delOrderAsync,
     },
   } = useStoreHook();
 
+  // 是否有预定
   useEffect(() => {
-    getDetailAsync({
+    hasOrderAsync({
       id: query?.id,
     });
   }, []);
 
+  // 获取房屋详情
   useEffect(() => {
-    getCommentsAsync({});
+    getDetailAsync({
+      id: query?.id || 1,
+    });
+  }, []);
+
+  // 获取评论
+  useEffect(() => {
+    getCommentsAsync({
+      houseId: query?.id,
+    });
   }, [reloadCommentsNum]);
 
   // 离开页面，重置数据
@@ -70,13 +85,28 @@ export default function (props) {
     [comments, showLoadMore],
   );
 
+  // 子组件调用
+  const handleBtnClick = (id) => {
+    // 如果id不存在，可以添加订单
+    if (!id) {
+      addOrderAsync({
+        id: query?.id,
+      });
+    } else {
+      // 如果id存在，可以删除订单
+      delOrderAsync({
+        id: query?.id,
+      });
+    }
+  };
+
   return (
     <div className="house-page">
       {/* banner */}
       <Banner banner={detail?.banner} />
 
       {/* 房屋信息 */}
-      <Info detail={detail?.info} />
+      <Info detail={detail?.info} order={order} btnClick={handleBtnClick} />
 
       {/* 评论列表 */}
       <Lists lists={comments} showLoadMore={showLoadMore} />

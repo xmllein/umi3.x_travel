@@ -1,4 +1,4 @@
-import { ErrorBoundary, MenuBar } from '@/components';
+import { MenuBar } from '@/components';
 import { useLocation } from 'umi';
 import { StoreProvider } from 'think-react-store';
 import * as store from '@/stores';
@@ -15,7 +15,7 @@ export default function IndexPage(props) {
         show={path.includes(location.pathname)}
         pathname={location.pathname}
       />
-      <ErrorBoundary>{props.children}</ErrorBoundary>
+      {props.children}
     </StoreProvider>
   );
 }

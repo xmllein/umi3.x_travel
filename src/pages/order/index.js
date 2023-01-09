@@ -5,6 +5,7 @@ import { useHttpHook, useObserverHook } from '@/hooks';
 import { CommonEnum } from '@/enums';
 import { isEmpty } from 'project-libs';
 import { Http } from '@/utils';
+import { ErrorBoundary } from '@/components';
 
 // 引入样式
 import './index.less';
@@ -26,21 +27,23 @@ export default function (props) {
 
   const invokeHttp = async (pageNum) => {
     const result = await Http({
-      url: '/order/lists',
+      url: '/orders/lists',
       body: {
         ...page,
         pageNum,
-        type,
+        isPayed: type,
       },
     });
+    console.log(result);
     return result;
   };
 
   // 获取订单数据
   const fetchOrder = async (pageNum) => {
     const result = await invokeHttp(pageNum);
-    if (!isEmpty(result) && result.length === page.pageSize) {
-      setOrders([...orders, ...result]);
+
+    if (!isEmpty(result) && result.length <= page.pageSize) {
+      setOrders([...result]);
       setOrderLoading(true);
     } else {
       setOrderLoading(false);
@@ -62,7 +65,7 @@ export default function (props) {
         const result = await invokeHttp(page.pageNum + 1);
         if (
           !isEmpty(result) &&
-          !isEmpty(result) &&
+          !isEmpty(orders) &&
           result.length === page.pageSize
         ) {
           setOrders([...orders, ...result]);
@@ -95,15 +98,17 @@ export default function (props) {
   };
 
   return (
-    <div className="order-page">
-      <Tabs tabs={tabs} onChange={handleChange}>
-        <div className="tab">
-          <Lists orders={orders} type={0} showLoadMore={orderLoading} />
-        </div>
-        <div className="tab">
-          <Lists orders={orders} type={1} showLoadMore={orderLoading} />
-        </div>
-      </Tabs>
-    </div>
+    <ErrorBoundary>
+      <div className="order-page">
+        <Tabs tabs={tabs} onChange={handleChange}>
+          <div className="tab">
+            <Lists orders={orders} type={0} showLoadMore={orderLoading} />
+          </div>
+          <div className="tab">
+            <Lists orders={orders} type={1} showLoadMore={orderLoading} />
+          </div>
+        </Tabs>
+      </div>
+    </ErrorBoundary>
   );
 }

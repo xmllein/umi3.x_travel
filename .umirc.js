@@ -51,6 +51,14 @@ export default defineConfig({
       ],
     },
   ],
+  mock: false,
+  // 设置代理
+  proxy: {
+    '/api': {
+      target: 'http://localhost:7001/',
+      changeOrigin: true,
+    },
+  },
   mfsu: {},
   fastRefresh: {},
 });
